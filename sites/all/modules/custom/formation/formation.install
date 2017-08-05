@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * Implements hook_schema().
+ *
+ */
+function formation_schema() {
+  $schema['formation_count'] = array(
+    'description' => 'Table to store how many times each node has been viewed.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'Node nid.',
+        'type' => 'int',
+        'not null' => TRUE,
+      ),
+//       'title' => array(
+//         'description' => 'Node title.',
+//         'type' => 'varchar',
+//         'length' => '255',
+//         'not null' => TRUE,
+//       ),
+      'compteur' => array(
+        'description' => 'Compteur de stats.',
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array(
+      'nid',
+    )
+  );
+
+  return $schema;
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function formation_uninstall() {
+  // On supprime les données stockées en base.
+  variable_del('formation_block_color');
+  variable_del('formation_block_color_region');
+}
+
+/**
+ * This update will add the field "compteur" and remove the field "title"
+ * from the "formation_count" table.
+ */
+function formation_update_7000(&$sandbox = NULL) {
+  db_add_field('formation_count', 'compteur', array(
+  										'type' => 'int',
+  										'size' => 'tiny',
+  										'not null' => TRUE,
+  ));
+  db_drop_field('formation_count', 'title');
+}
